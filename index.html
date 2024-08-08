@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keurig Product Carousel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@accessible360/accessible-slick@1.0.1/slick/slick.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@accessible360/accessible-slick@1.0.1/slick/slick-theme.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Markazi+Text:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Markazi Text', Verdana, Arial, Helvetica, sans-serif;
+        }
+
+        #ksk-brewers-product-carousel {
+            width: 100%;
+            max-width: 1440px;
+            margin: 40px auto 60px;
+            padding: 0;
+            text-align: center;
+        }
+
+        #ksk-brewers-product-carousel .carousel-title {
+            font-family: 'Markazi Text', Verdana, Arial, Helvetica, sans-serif;
+            font-size: 30px;
+            line-height: 38px;
+            color: #3b2b2f;
+            margin-bottom: 10px;
+        }
+
+        #ksk-brewers-product-carousel .carousel-subtitle {
+            font-family: 'Markazi Text', Verdana, Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            line-height: 23px;
+            color: #3b2b2f;
+            margin-bottom: 30px;
+        }
+
+        #ksk-brewers-product-carousel .carousel-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        #ksk-brewers-product-carousel .carousel-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: #3b2b2f;
+            width: 288px;
+        }
+
+        #ksk-brewers-product-carousel .carousel-item img {
+            max-width: 100%;
+            max-height: 186px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        #ksk-brewers-product-carousel .carousel-item-title {
+            font-family: 'Markazi Text', Verdana, Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #3b2b2f;
+            text-align: center;
+        }
+
+        .slick-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @media (max-width: 767px) {
+            #ksk-brewers-product-carousel .carousel-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="ksk-brewers-product-carousel">
+    <h2 class="carousel-title">Save on Dorm sized Brewer</h2>
+    <p class="carousel-subtitle">Your College Coffee Bar</p>
+    <div class="carousel-content" data-slick='{
+        "mobileFirst": true,
+        "variableWidth": false,
+        "infinite": false,
+        "arrows": true,
+        "slidesToShow": 1,
+        "slidesToScroll": 1,
+        "dots": true,
+        "responsive": [
+            {
+                "breakpoint": 511,
+                "settings": {
+                    "slidesToShow": 2,
+                    "slidesToScroll": 2
+                }
+            },
+            {
+                "breakpoint": 767,
+                "settings": {
+                    "slidesToShow": 3,
+                    "slidesToScroll": 3
+                }
+            },
+            {
+                "breakpoint": 1100,
+                "settings": {
+                    "slidesToShow": 4,
+                    "slidesToScroll": 4
+                }
+            }
+        ]
+    }'>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const products = ["13-275-8345-213", "13-275-8294-208", "13-275-8293-210", "13-275-8294-222", "13-275-8293-250", "13-275-8294-183"];
+        const imageOverrides = {
+            "13-275-8294-208": "https://images.keurig.com/is/image/keurig/Keurig-K-Slim-coffee-maker_cab2c_en_13-275-8294-208?fmt=png-alpha",
+            "13-275-8293-210": "https://images.keurig.com/is/image/keurig/Keurig-K-Mini-coffee-maker_cab2c_en_13-275-8293-210?id=KlsRB1&scl=16&req=tile&rect=0,0,188,188&fmt=jpg&dpr=off",
+            "13-275-8294-222": "https://images.keurig.com/is/image/keurig/001_Alt_Img_K-Slim_K-ca_EN_Twilightblue?id=OpYQD2&wid=304&hei=304&fmt=jpg&dpr=off",
+            "13-275-8293-250": "https://images.keurig.com/is/image/keurig/Keurig-K-Mini-coffee-maker_cab2c_en_13-275-8293-250_swatch?id=tf9S70&scl=8&req=tile&rect=0,0,250,250&fmt=jpg&dpr=off",
+        };
+
+        fetch('https://feeds.datafeedwatch.com/24022/58e524ed174f7679757e00f6cec892fcdccc5bb4.json')
+            .then(response => response.json())
+            .then(data => {
+                const carousel = document.querySelector('.carousel-content');
+                const productList = data.products;
+
+                products.forEach(productId => {
+                    const product = productList.find(item => item.sku === productId);
+                    if (product) {
+                        const productImage = imageOverrides[productId] || product.thumbnailImage;
+                        const priceHTML = product.salePrice !== product.price ? `<del>$${product.price}</del>` : '';
+                        const productUrl = new URL(product.productUrL);
+                        const relativePath = productUrl.pathname + productUrl.hash;
+
+                        const productHTML = `
+                            <a href="${relativePath}" class="carousel-item" data-ga-event-name="select_promotion" data-ga-promo-name="back to school 2024" data-ga-promo-creative="Brewer slider" data-ga-promo-position="homepage block 2" data-ga-click-text="${product.productName}" data-ga-click-type="image" aria-label="${product.productName}">
+                                <div class="brewer-img">
+                                    <img class="card-img" src="${productImage}" alt="${product.productName}">
+                                </div>
+                                <div class="brewer-description">
+                                    <span class="carousel-item-title">${product.productName}</span>
+                                    <div class="brewer-price">$${product.salePrice} ${priceHTML}</div>
+                                </div>
+                            </a>`;
+                        carousel.innerHTML += productHTML;
+                    } else {
+                        console.log("Product not found for ID:", productId);
+                    }
+                });
+
+                Promise.all([
+                    fetch('https://cdn.jsdelivr.net/npm/@accessible360/accessible-slick@1.0.1/slick/slick.min.js')
+                        .then(response => response.text())
+                        .then(text => eval(text))
+                ]).then(function () {
+                    $(document).ready(function() {
+                        $('.carousel-content').on('init', function (event, slick) {
+                            setTimeout(function () {
+                                slick.$slides.each(function (index, element) {
+                                    $(element).attr('tabindex', 0);
+                                    console.log('tab index changed');
+                                });
+                            }, 100);
+                        });
+                        $('.carousel-content').slick();
+                        console.log("Slick Initialized");
+                    });
+                });
+            })
+            .catch(error => console.error("Error loading JSON data:", error));
+    });
+</script>
+
+</body>
+</html>
